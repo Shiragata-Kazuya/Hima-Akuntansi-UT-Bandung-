@@ -154,38 +154,58 @@ const StrukturPage = (() => {
     // ── RENDER BAGAN ─────────────────────────
     const _renderPersonCard = (person, role, isLeader = false) => {
         if (!person) return '';
-        const border = isLeader ? 'border-gold-500' : 'border-gray-200';
-        const size   = isLeader ? 'w-32 h-32' : 'w-24 h-24';
 
-        // Hitung posisi & zoom
-        // posX/posY = 0–100 (dari admin panel baru)
-        // scale     = angka zoom, misal 1.2
+        // Ukuran eksplisit px — tidak bergantung Tailwind CDN agar pasti ter-apply
+        const px         = isLeader ? 128 : 96;   // w-32=128px, w-24=96px
+        const borderClr  = isLeader ? '#F59E0B' : '#E5E7EB'; // gold-500 / gray-200
+
         const posX  = person.posX  ?? 50;
-        const posY  = person.posY  ?? 20;  // default sedikit ke atas agar wajah kelihatan
+        const posY  = person.posY  ?? 20;
         const scale = person.scale ?? 1;
 
-        // background-size: scale * 100% agar zoom bekerja benar di dalam clip lingkaran
-        // background-position: posX% posY%
-        const bgSize     = `${scale * 100}%`;
+        // background-size pakai px eksplisit (bukan %) agar lebih presisi
+        // px * scale = ukuran gambar dalam px
+        const bgSizePx   = Math.round(px * scale);
         const bgPosition = `${posX}% ${posY}%`;
 
-        // Fallback avatar jika img kosong/error — pakai data-img untuk JS fallback
-        const safeImg    = _e(person.img || '');
-        const avatarUrl  = `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name ?? 'N')}&background=0a192f&color=FFD700&size=256`;
+        const safeImg   = _e(person.img || '');
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name ?? 'N')}&background=0a192f&color=FFD700&size=256`;
+        // Gunakan avatar sebagai fallback jika img kosong
+        const bgImg     = safeImg || avatarUrl;
 
         return `
             <div class="flex flex-col items-center group select-none">
-                <div class="${size} rounded-full overflow-hidden border-4 ${border} shadow-lg mb-3 bg-gray-200 hover:shadow-xl transition-shadow cursor-pointer relative"
-                     onclick="StrukturPage.openModal('${safeImg}')" oncontextmenu="return false;"
-                     data-img="${safeImg}" data-avatar="${_e(avatarUrl)}"
+                <!-- Lingkaran: semua properti pakai inline style eksplisit -->
+                <div onclick="StrukturPage.openModal('${safeImg || avatarUrl}')"
+                     oncontextmenu="return false;"
                      style="
-                         background-image: url('${safeImg}');
-                         background-size: ${bgSize};
-                         background-position: ${bgPosition};
-                         background-repeat: no-repeat;
-                     ">
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
-                        <i class="fas fa-expand-alt text-white"></i>
+                         width:${px}px; height:${px}px;
+                         border-radius:50%;
+                         border:4px solid ${borderClr};
+                         box-shadow:0 4px 6px rgba(0,0,0,0.1);
+                         margin-bottom:12px;
+                         background-color:#E5E7EB;
+                         background-image:url('${bgImg}');
+                         background-size:${bgSizePx}px;
+                         background-position:${bgPosition};
+                         background-repeat:no-repeat;
+                         cursor:pointer;
+                         position:relative;
+                         overflow:hidden;
+                         transition:box-shadow 0.3s;
+                     "
+                     onmouseover="this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)'"
+                     onmouseout="this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'">
+                    <div style="
+                        position:absolute;inset:0;
+                        background:rgba(0,0,0,0.3);
+                        opacity:0;transition:opacity 0.3s;
+                        display:flex;align-items:center;justify-content:center;
+                        z-index:20;
+                    "
+                    onmouseover="this.style.opacity='1'"
+                    onmouseout="this.style.opacity='0'">
+                        <i class="fas fa-expand-alt" style="color:white;font-size:16px;pointer-events:none;"></i>
                     </div>
                 </div>
                 <h4 class="font-bold text-navy-900 text-center text-sm md:text-base group-hover:text-gold-500 transition-colors">${_e(person.name)}</h4>
