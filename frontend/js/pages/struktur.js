@@ -156,16 +156,34 @@ const StrukturPage = (() => {
         if (!person) return '';
         const border = isLeader ? 'border-gold-500' : 'border-gray-200';
         const size   = isLeader ? 'w-32 h-32' : 'w-24 h-24';
-        const pos    = person.posisi || 'object-top';
-        const scale  = person.scale  || 1;
+
+        // Hitung posisi & zoom
+        // posX/posY = 0–100 (dari admin panel baru)
+        // scale     = angka zoom, misal 1.2
+        const posX  = person.posX  ?? 50;
+        const posY  = person.posY  ?? 20;  // default sedikit ke atas agar wajah kelihatan
+        const scale = person.scale ?? 1;
+
+        // background-size: scale * 100% agar zoom bekerja benar di dalam clip lingkaran
+        // background-position: posX% posY%
+        const bgSize     = `${scale * 100}%`;
+        const bgPosition = `${posX}% ${posY}%`;
+
+        // Fallback avatar jika img kosong/error — pakai data-img untuk JS fallback
+        const safeImg    = _e(person.img || '');
+        const avatarUrl  = `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name ?? 'N')}&background=0a192f&color=FFD700&size=256`;
+
         return `
             <div class="flex flex-col items-center group select-none">
-                <div class="${size} rounded-full overflow-hidden border-4 ${border} shadow-lg mb-3 bg-white hover:shadow-xl transition-shadow cursor-pointer relative"
-                     onclick="StrukturPage.openModal('${_e(person.img)}')" oncontextmenu="return false;">
-                    <img src="${_e(person.img)}" alt="${_e(person.name)}"
-                         class="w-full h-full object-cover ${pos} transition-transform duration-300 group-hover:scale-110 pointer-events-none"
-                         style="transform: scale(${scale});" loading="lazy"
-                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(person.name ?? 'N')}&background=0a192f&color=FFD700&size=256'">
+                <div class="${size} rounded-full overflow-hidden border-4 ${border} shadow-lg mb-3 bg-gray-200 hover:shadow-xl transition-shadow cursor-pointer relative"
+                     onclick="StrukturPage.openModal('${safeImg}')" oncontextmenu="return false;"
+                     data-img="${safeImg}" data-avatar="${_e(avatarUrl)}"
+                     style="
+                         background-image: url('${safeImg}');
+                         background-size: ${bgSize};
+                         background-position: ${bgPosition};
+                         background-repeat: no-repeat;
+                     ">
                     <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
                         <i class="fas fa-expand-alt text-white"></i>
                     </div>
