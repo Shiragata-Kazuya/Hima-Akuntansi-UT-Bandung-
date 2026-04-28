@@ -81,15 +81,27 @@ const HomePage = (() => {
                 <!-- Hero Carousel -->
                 <div class="relative bg-navy-900 h-[500px] w-full overflow-hidden">
                     <div id="carousel-container" class="absolute inset-0 flex transition-transform duration-700 ease-in-out">
-                        ${slides.length > 0 ? slides.map(s => `
-                            <div class="min-w-full h-full relative">
-                                <img src="${_e(s.image)}" alt="${_e(s.alt)}"
-                                     class="w-full h-full object-cover opacity-40" loading="lazy">
-                                <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
+                        ${slides.length > 0 ? slides.map(s => {
+                            const posX  = s.posX  ?? 50;
+                            const posY  = s.posY  ?? 50;
+                            const scale = s.scale ?? 1;
+                            return `
+                            <div class="min-w-full h-full relative"
+                                 style="
+                                     background-image: url('${_e(s.image)}');
+                                     background-size: ${scale * 100}%;
+                                     background-position: ${posX}% ${posY}%;
+                                     background-repeat: no-repeat;
+                                     background-color: #0a192f;
+                                 ">
+                                <!-- Overlay gelap seperti opacity-40 -->
+                                <div style="position:absolute;inset:0;background:rgba(10,25,47,0.55);"></div>
+                                <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4" style="z-index:1;">
                                     <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">${_e(s.title)}</h1>
                                     <p class="text-gold-400 text-xl font-medium tracking-wide">${_e(s.subtitle)}</p>
                                 </div>
-                            </div>`).join('') : `
+                            </div>`;
+                        }).join('') : `
                             <div class="min-w-full h-full flex items-center justify-center">
                                 <h1 class="text-4xl font-bold text-white">HIMA AKUNTANSI UT BANDUNG</h1>
                             </div>`
