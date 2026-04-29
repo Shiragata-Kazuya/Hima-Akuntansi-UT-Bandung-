@@ -388,22 +388,38 @@ const KontakPage = (() => {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
 
         try {
-            // Simpan ke Firestore koleksi `pesan_masuk`
+            // 1️⃣ Simpan ke Firestore koleksi `pesan_masuk`
             await addDoc(collection(db, 'pesan_masuk'), {
                 name,
                 email,
                 subject,
                 message,
                 timestamp: serverTimestamp(),
-                status:    'unread'   // field tambahan untuk admin dashboard
+                status:    'unread'
             });
+            console.log('✅ Pesan berhasil disimpan ke Firestore koleksi pesan_masuk.');
+
+            // 2️⃣ Kirim notifikasi email via EmailJS
+            await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+                from_name:    name,
+                from_email:   email,
+                subject:      subject,
+                message:      message,
+                reply_to:     email
+            }, USER_ID);
+            console.log('✅ Email notifikasi berhasil dikirim via EmailJS.');
 
             _showFormNotif('✅ Pesan Anda berhasil terkirim! Kami akan segera menghubungi Anda.', true);
             form.reset();
-            console.log('✅ Pesan berhasil disimpan ke Firestore koleksi pesan_masuk.');
         } catch (error) {
-            console.error('❌ Gagal menyimpan pesan ke Firestore:', error);
-            _showFormNotif('❌ Gagal mengirim pesan. Silakan coba lagi atau hubungi kami langsung.', false);
+            console.error('❌ Error:', error);
+            // Pesan tetap tersimpan di Firestore meski email gagal
+            if (error?.text || error?.status) {
+                // Error dari EmailJS
+                _showFormNotif('⚠️ Pesan tersimpan, tapi gagal kirim email notifikasi. Hubungi kami langsung.', false);
+            } else {
+                _showFormNotif('❌ Gagal mengirim pesan. Silakan coba lagi atau hubungi kami langsung.', false);
+            }
         } finally {
             submitBtn.disabled  = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Pesan';
