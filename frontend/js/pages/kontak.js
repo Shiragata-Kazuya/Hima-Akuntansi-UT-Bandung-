@@ -28,9 +28,9 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 // ─── EmailJS config (pindahkan ke sini agar tidak menganggu async function) ───
-const SERVICE_ID  = 'service_x5kc9fx';   // MASUKKAN SERVICE ID DI SINI
-const TEMPLATE_ID = 'template_7mlnwi1';  // MASUKKAN TEMPLATE ID DI SINI
-const USER_ID     = 'YeViBJxZKDbLYSgCt';
+const SERVICE_ID  = 'service_a8l8rsn';   // MASUKKAN SERVICE ID DI SINI
+const TEMPLATE_ID = 'template_cjt27rs';  // MASUKKAN TEMPLATE ID DI SINI
+const USER_ID     = 'PdFEAzoytCuoFvR4y';
 
 const KontakPage = (() => {
 
