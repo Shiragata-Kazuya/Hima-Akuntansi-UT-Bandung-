@@ -89,7 +89,7 @@ const HomePage = (() => {
                             <div class="min-w-full h-full relative"
                                  style="
                                      background-image: url('${_e(s.image)}');
-                                     background-size: ${scale * 100}%;
+                                     background-size: ${scale !== 1 ? (scale * 100) + '%' : 'cover'};
                                      background-position: ${posX}% ${posY}%;
                                      background-repeat: no-repeat;
                                      background-color: #0a192f;
