@@ -27,6 +27,11 @@ import {
     serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+// ─── EmailJS config (pindahkan ke sini agar tidak menganggu async function) ───
+const SERVICE_ID  = 'service_x5kc9fx';   // MASUKKAN SERVICE ID DI SINI
+const TEMPLATE_ID = 'template_7mlnwi1';  // MASUKKAN TEMPLATE ID DI SINI
+const USER_ID     = 'YeViBJxZKDbLYSgCt';
+
 const KontakPage = (() => {
 
     let kontakData = null;
@@ -37,9 +42,7 @@ const KontakPage = (() => {
 
     const loadKontakData = async () => {
         _renderLoading();
-        service_id = 'service_x5kc9fx', // MASUKKAN SERVICE ID DI SINI
-        template_id = 'template_7mlnwi1', // MASUKKAN TEMPLATE ID DI SINI
-        user_id = 'YeViBJxZKDbLYSgCt'
+
         try {
             const docSnap = await getDoc(doc(db, 'kontak', 'data'));
 
