@@ -37,7 +37,9 @@ const KontakPage = (() => {
 
     const loadKontakData = async () => {
         _renderLoading();
-
+        service_id: 'service_x5kc9fx', // MASUKKAN SERVICE ID DI SINI
+        template_id: 'template_7mlnwi1', // MASUKKAN TEMPLATE ID DI SINI
+        user_id: 'YeViBJxZKDbLYSgCt'
         try {
             const docSnap = await getDoc(doc(db, 'kontak', 'data'));
 
