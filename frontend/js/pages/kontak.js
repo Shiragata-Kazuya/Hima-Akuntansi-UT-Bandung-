@@ -401,11 +401,11 @@ const KontakPage = (() => {
 
             // 2️⃣ Kirim notifikasi email via EmailJS
             await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-                name:    name,       // cocok dengan {{name}} di template
-                email:   email,      // cocok dengan {{email}} di Reply To
-                title:   subject,    // cocok dengan {{title}} di Subject
-                message: message,    // cocok dengan {{message}} di body
-                from_name: name      // cocok dengan {{from_name}} di From Name
+                from_name:    name,    // cocok dengan {{from_name}} di From Name
+                name:         name,    // cocok dengan {{name}} di body
+                email:        email,   // cocok dengan {{email}} di Reply To
+                title:        subject, // cocok dengan {{title}} di Subject
+                message:      message  // cocok dengan {{message}} di body
             }, USER_ID);
             console.log('✅ Email notifikasi berhasil dikirim via EmailJS.');
 
