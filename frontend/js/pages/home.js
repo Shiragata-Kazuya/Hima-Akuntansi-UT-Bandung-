@@ -44,9 +44,9 @@ const HomePage = (() => {
         },
         about: { title: 'Tentang Kami', description: 'Himpunan Mahasiswa Akuntansi Universitas Terbuka Bandung.' },
         features: [
-            { icon: 'fa-book-open', title: 'Edukasi', description: 'Workshop dan seminar untuk meningkatkan kompetensi' },
-            { icon: 'fa-users', title: 'Sosial', description: 'Kegiatan bakti sosial dan kepedulian masyarakat' },
-            { icon: 'fa-network-wired', title: 'Relasi', description: 'Membangun jaringan profesional yang luas' }
+            { icon: 'fa-book-open', title: 'Edukasi', description: 'Workshop dan seminar untuk meningkatkan kompetensi', target: 'kegiatan' },
+            { icon: 'fa-users', title: 'Sosial', description: 'Kegiatan bakti sosial dan kepedulian masyarakat', target: 'kegiatan'  },
+            { icon: 'fa-network-wired', title: 'Relasi', description: 'Membangun jaringan profesional yang luas', target: 'kontak' }
         ],
         stats: [
             { number: '20+', label: 'Anggota Aktif', icon: 'fa-users' },
@@ -131,7 +131,10 @@ const HomePage = (() => {
                         ${(homeData.features ?? []).map(f => `
                             <div class="p-6 bg-white shadow-lg rounded-xl border-t-4 border-navy-800 hover:-translate-y-2 transition duration-300">
                                 <i class="fas ${_e(f.icon)} text-4xl text-gold-500 mb-4"></i>
-                                <h3 class="text-xl font-bold text-navy-900 mb-2">${_e(f.title)}</h3>
+                                    <h3 onclick="Navigation.showPage('${_e(f.target || 'kegiatan')}')" 
+                                          class="text-xl font-bold text-navy-900 mb-2 cursor-pointer hover:text-gold-500 transition-colors inline-block">
+                                          ${_e(f.title)}
+                                    </h3>
                                 <p class="text-gray-600 text-sm">${_e(f.description)}</p>
                             </div>`).join('')}
                     </div>
